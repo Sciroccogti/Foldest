@@ -1,2 +1,3 @@
 # Foldest
-An automatic folder organizer。
+
+An automatic folder organizer.

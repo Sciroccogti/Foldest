@@ -1,0 +1,18 @@
+{
+  "operatingDir" : "Downloads",
+  "trash": {
+    "enable": true,
+    "thresh": 30
+  },
+  "rules": [
+    {
+      "name": "document",
+      "regex": "*.pdf",
+      "minSize": null,
+      "maxSize": 100,
+      "lastAccess": 30,
+      "targetDir": "documents",
+      "priority": 0
+    }
+  ]
+}
