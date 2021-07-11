@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'dart:async';
+
+import 'package:global_configuration/global_configuration.dart';
+
+const String _confPath = "assets/cfg/conf.json";
 
 class Rule {
   String name;
@@ -36,26 +42,46 @@ class Conf {
 
   Conf(this.operatingDir, this.rulesList,
       [this.enableTrash = false, this.threshTrash = 30]);
+
+  Conf.withGlobalConfiguration()
+      : operatingDir = "",
+        rulesList = List.empty(growable: true),
+        enableTrash = false,
+        threshTrash = 30 {
+    Map<String, dynamic> appConfig = GlobalConfiguration().appConfig;
+    operatingDir = appConfig["operatingDir"] ?? "";
+    for (Map<String, dynamic> map in appConfig["rules"]) {
+      rulesList.add(Rule.withMap(map));
+    }
+
+    enableTrash = appConfig["trash"]["enable"] ?? false;
+    threshTrash = appConfig["trash"]["thresh"] ?? 30;
+  }
 }
 
-/// Read Conf from `assets/conf.json`
-///
-/// Should judge whether operatingDir is ""
-/// async constructor is not allowed
-Future<Conf> readConfJson() async {
-  // read json into String TODO: AssetBundle?
-  String jsonString = await rootBundle.loadString("assets/conf.json");
-  // json to List or Map
-  final jsonMap = jsonDecode(jsonString);
-  // store json List or Map
-  List<Rule> rules = List.empty(growable: true);
-  for (Map<String, dynamic> map in jsonMap["rules"]) {
-    rules.add(Rule.withMap(map));
-  }
+saveConf(Conf confTmp) {
+  Map<String, dynamic> _outJson = {};
 
-  String operatingDir = jsonMap["operatingDir"] ?? "";
-  bool trashEnable = jsonMap["trash"]["enable"] ?? false;
-  int trashThresh = jsonMap["trash"]["thresh"] ?? 30;
-  Conf conf = Conf(operatingDir, rules, trashEnable, trashThresh);
-  return conf;
+  _outJson["operatingDir"] = confTmp.operatingDir;
+  _outJson["trash"] = {
+    "enable": confTmp.enableTrash,
+    "thresh": confTmp.threshTrash
+  };
+
+  List<Map<String, dynamic>> _rulesJson = List.empty(growable: true);
+  for (Rule r in confTmp.rulesList) {
+    Map<String, dynamic> _ruleJson = {};
+    _ruleJson["name"] = r.name;
+    _ruleJson["regex"] = r.regex;
+    _ruleJson["minSize"] = r.minSize;
+    _ruleJson["maxSize"] = r.maxSize;
+    _ruleJson["lastAccess"] = r.lastAccess;
+    _ruleJson["targetDir"] = r.targetDir;
+    _ruleJson["priority"] = r.priority;
+    _rulesJson.add(_ruleJson);
+  }
+  _outJson["rules"] = _rulesJson;
+
+  File _jsonFile = File(_confPath);
+  _jsonFile.writeAsString(jsonEncode(_outJson));
 }

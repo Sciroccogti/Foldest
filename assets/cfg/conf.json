@@ -1,5 +1,5 @@
 {
-  "operatingDir" : "Downloads",
+  "operatingDir": "/home/zyf/下载/document",
   "trash": {
     "enable": true,
     "thresh": 30
@@ -8,7 +8,7 @@
     {
       "name": "document",
       "regex": "*.pdf",
-      "minSize": null,
+      "minSize": 0,
       "maxSize": 100,
       "lastAccess": 30,
       "targetDir": "documents",
