@@ -14,20 +14,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // FutureBuilder<Conf> fetchConf = FutureBuilder<Conf>(
-    //   future: readConfJson(),
-    //   builder: (BuildContext context, AsyncSnapshot<Conf> snapshot) {
-    //     confSaved = Conf("", List.empty(growable: true));
-    //     print("Conf COnf CONf!");
-    //     if (snapshot.hasData && snapshot.data != null) {
-    //       confSaved = snapshot.data!;
-    //     } else if (snapshot.hasError || snapshot.data == null) {
-    //       // TODO: prompt to reset conf.json
-    //     } else {}
-    //     return Text("Foldest");
-    //   },
-    // );
-    // fetchConf;
     return MaterialApp(
       title: "Foldest", // used by the OS task switcher
       theme: ThemeData(
