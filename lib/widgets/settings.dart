@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
   /// prompt the FilesystemPicker to select a folder
   Future<String?> selectPath() async {
     Directory rootPath;
-    if (Platform.isLinux || Platform.isMacOS) {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       rootPath = await getDownloadsDirectory() ?? Directory("/");
     } else if (Platform.isAndroid) {
       rootPath = Directory("/storage/emulated/0");
